@@ -1,4 +1,4 @@
-﻿-- TrufiGCD stevemyz@gmail.com
+-- TrufiGCD stevemyz@gmail.com
 ChatFrame1:AddMessage("载入成功")--JANY
 --sizeicon = 30 
 --speed = sizeicon /1.6 --回放速度
@@ -1016,7 +1016,7 @@ function TrGCDEventHandler(self, event, ...)
 			if (arg5 == 42292) then spellicon = trinket end --замена текстуры пвп тринкета
 				local IsChannel = UnitChannelInfo(arg1)--ченнелинг ли спелл
 			if (event == "UNIT_SPELLCAST_START") then
-				print("目标正在施放技能 " .. spellname,arg5,GetSpellLink(arg5),UnitName("target"))
+				--print("目标正在施放技能 " .. spellname,arg5,GetSpellLink(arg5),UnitName("target"))
 				SendBossNotes(spellname)
 				TrGCDAddGcdSpell(spellicon, i, arg5)
 				TrGCDCastSp[i] = 0-- 0 - каст идет, 1 - каст прошел и не идет
@@ -1024,7 +1024,7 @@ function TrGCDEventHandler(self, event, ...)
 
 			elseif (event == "UNIT_SPELLCAST_SUCCEEDED") then
 				if (TrGCDCastSp[i] == 0) then
-					print("目标成功施放技能 " .. spellname,arg5,GetSpellLink(arg5))
+					--print("目标成功施放技能 " .. spellname,arg5,GetSpellLink(arg5))
 					if (IsChannel == nil) then TrGCDCastSp[i] = 1 end
 				else
 					local b = false --висит ли багнутый бафф инстант каста
