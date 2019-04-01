@@ -1,4 +1,4 @@
--- TrufiGCD stevemyz@gmail.com
+﻿-- TrufiGCD stevemyz@gmail.com
 ChatFrame1:AddMessage("载入成功")--JANY
 --sizeicon = 30 
 --speed = sizeicon /1.6 --回放速度
@@ -361,6 +361,9 @@ function TrufiGCDAddonLoaded(self, event, ...)
 			TrGCDGUI.widthslider[i]:Show()
 		end
 		InterfaceOptions_AddCategory(TrGCDGUI)
+		--添加自定义选项卡
+	
+
 		--添加Spell Black List选项卡
 		TrGCDGUI.BL = CreateFrame ("Frame", nil, UIParent, "OptionsBoxTemplate")
 		TrGCDGUI.BL:Hide()
@@ -534,6 +537,7 @@ function TrufiGCDAddonLoaded(self, event, ...)
 							if (TrufiGCDChSave["TooltipSpellID"] == true) then
 								if (self.spellID ~= nil) then 
 									--print(GetSpellLink(self.spellID) .. ' ID: ' .. self.spellID,"GetSpellLink(self.spellID)") 
+									--print("指向技能图标后触发")
 
 								end
 							end
@@ -1008,7 +1012,9 @@ function TrGCDEventHandler(self, event, ...)
 	if (TrGCDEnable and t and TrGCDQueueOpt[i].enable) then --所有的技能
 		--print(arg5 .. " - " .. spellname,"我正在施放技能")
 		if (TrGCDQueueOpt[i].text == "Target") then
+			--print("[------------------------------------]")
 			SendBossNotes(spellname)
+			--print("[+1]")
 		end
 		local blt = true -- TGCDCD队列
 		local sblt = true -- 对于关闭的黑名单(按ID在内部)
@@ -1020,8 +1026,7 @@ function TrGCDEventHandler(self, event, ...)
 				local IsChannel = UnitChannelInfo(arg1)--ченнелинг ли спелл
 			if (event == "UNIT_SPELLCAST_START") then
 				--print("目标正在施放技能 " .. spellname,arg5,GetSpellLink(arg5),UnitName("target"))
-				
-
+				--print("[+2]目标正在施放读条技能")
 				TrGCDAddGcdSpell(spellicon, i, arg5)
 				TrGCDCastSp[i] = 0-- 0 - каст идет, 1 - каст прошел и не идет
 				TrGCDCastSpBanTime[i] = GetTime()
@@ -1029,6 +1034,7 @@ function TrGCDEventHandler(self, event, ...)
 			elseif (event == "UNIT_SPELLCAST_SUCCEEDED") then
 				if (TrGCDCastSp[i] == 0) then
 					--print("目标成功施放技能 " .. spellname,arg5,GetSpellLink(arg5))
+					--print("[+3]目标成功施放完读条技能")
 					if (IsChannel == nil) then TrGCDCastSp[i] = 1 end
 				else
 					local b = false --висит ли багнутый бафф инстант каста
@@ -1048,6 +1054,7 @@ function TrGCDEventHandler(self, event, ...)
 					end
 					if ((casttime <= 0) or b) then TrGCDAddGcdSpell(spellicon, i, arg5) end
 					--print("succeeded " .. spellname .. " - " ..TrGCDCastSp[i],"成功施放技能")
+					--print("[+4]发生的所有技能和攻击事件")
 				end
 			elseif ((event == "UNIT_SPELLCAST_STOP") and (TrGCDCastSp[i] == 0)) then
 				--print("目标施放技能失败 " .. spellname,arg5,GetSpellLink(arg5))
@@ -1060,6 +1067,7 @@ function TrGCDEventHandler(self, event, ...)
 			elseif (event == "UNIT_SPELLCAST_CHANNEL_STOP") then
 				TrGCDCastSp[i] = 1
 				--print("channel stop " .. spellname .. " - " .. TrGCDCastSp[i],"技能4")
+				--print("[+5")
 			end
 		end
 	end
@@ -1137,6 +1145,8 @@ end
 if GetLocale() == "zhCN" then
 	Raiders_List = {
 			["技能"] = {
+				{name = "邪能冲撞", raiders = "测试：敌人正在施放邪能冲撞"},
+				{name = "撕裂", raiders = "测试：敌人正在施放撕裂"},
 				{name = "火球术", raiders = "敌人正在施放火球术，快打断"},
 				{name = "回城", raiders = "3个图腾必须一起死，图腾死了再打Boss。"},
 			},
@@ -1260,7 +1270,7 @@ function SendBossNotes(bossname)
 			DEFAULT_CHAT_FRAME:AddMessage(raidersText, "say");
 		end
 	--else
-		--DEFAULT_CHAT_FRAME:AddMessage("数据库无此数据",1,0,0)
+		--DEFAULT_CHAT_FRAME:AddMessage("测试：数据库无此数据",1,0,0)
 	end
 end
 --JANY进入战斗离开战斗
@@ -1271,7 +1281,7 @@ f:SetScript("OnEvent", function (self,event)
 		DEFAULT_CHAT_FRAME:AddMessage("离开战斗状态",1,0,0)
 	elseif event == "PLAYER_REGEN_DISABLED" then
 		if UnitName("target") == nil then
-			DEFAULT_CHAT_FRAME:AddMessage("没有目标1",1,0,0)
+			DEFAULT_CHAT_FRAME:AddMessage("测试：没有目标",1,0,0)
 			return
 		end
 		SendBossNotes(UnitName("target"));
