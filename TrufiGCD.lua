@@ -1005,19 +1005,23 @@ function TrGCDEventHandler(self, event, ...)
 	local casttime = select(4, GetSpellInfo(arg5))/1000
 	local spellname = GetSpellInfo(arg5)
 	local i,t = TrGCDPlayerDetect(arg1) -- I-用户编号，t=true-如果有人在酒吧或竞技场上
-	if (TrGCDEnable and t and TrGCDQueueOpt[i].enable) then
+	if (TrGCDEnable and t and TrGCDQueueOpt[i].enable) then --所有的技能
 		--print(arg5 .. " - " .. spellname,"我正在施放技能")
-		local blt = true -- для открытого черного списка
-		local sblt = true -- для закрытого черного списка (внутри по ID)
+		if (TrGCDQueueOpt[i].text == "Target") then
+			SendBossNotes(spellname)
+		end
+		local blt = true -- TGCDCD队列
+		local sblt = true -- 对于关闭的黑名单(按ID在内部)
 		TrGCDInsSp["time"][i] = GetTime()	
 		for l=1, #TrGCDBL do if ((TrGCDBL[l] == spellname) or (GetSpellInfo(TrGCDBL[l]) == spellname)) then blt = false end end -- проверка на черный список
 		for l=1, #InnerBL do if (InnerBL[l] == arg5) then sblt = false end end -- проверка на закрытый черный список
 		if ((spellicon ~= nil) and t and blt and sblt and (GetSpellLink(arg5) ~= nil)) then
-			if (arg5 == 42292) then spellicon = trinket end --замена текстуры пвп тринкета
+			if (arg5 == 42292) then spellicon = trinket end --替换填充图案纹理
 				local IsChannel = UnitChannelInfo(arg1)--ченнелинг ли спелл
 			if (event == "UNIT_SPELLCAST_START") then
 				--print("目标正在施放技能 " .. spellname,arg5,GetSpellLink(arg5),UnitName("target"))
-				SendBossNotes(spellname)
+				
+
 				TrGCDAddGcdSpell(spellicon, i, arg5)
 				TrGCDCastSp[i] = 0-- 0 - каст идет, 1 - каст прошел и не идет
 				TrGCDCastSpBanTime[i] = GetTime()
@@ -1046,7 +1050,7 @@ function TrGCDEventHandler(self, event, ...)
 					--print("succeeded " .. spellname .. " - " ..TrGCDCastSp[i],"成功施放技能")
 				end
 			elseif ((event == "UNIT_SPELLCAST_STOP") and (TrGCDCastSp[i] == 0)) then
-				print("目标施放技能失败 " .. spellname,arg5,GetSpellLink(arg5))
+				--print("目标施放技能失败 " .. spellname,arg5,GetSpellLink(arg5))
 				TrGCDCastSp[i] = 1
 				TrGCDIcon[i][TrGCDi[i]-1].texture2:Show()
 				TrGCDIcon[i][TrGCDi[i]-1].texture2.show = true
@@ -1236,7 +1240,7 @@ function SendBossNotes(bossname)
 		raidersText = getRaidersByEncounterName(encounterName) or "无此BOSS数据"
 		bossname = encounterName
 	end
-	if raidersText and bossname then
+	if raidersText and bossname and raidersText~="无此BOSS数据" then
 		bossname = '目标:' .. bossname
 		if IsInRaid() then
 			--SendChatMessage(bossname, (IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT") or "raid");
@@ -1255,8 +1259,8 @@ function SendBossNotes(bossname)
 			DEFAULT_CHAT_FRAME:AddMessage(bossname, "say");
 			DEFAULT_CHAT_FRAME:AddMessage(raidersText, "say");
 		end
-	else
-		DEFAULT_CHAT_FRAME:AddMessage("请选中BOSS为你的目标或打开地下城手册选择BOSS",1,0,0)
+	--else
+		--DEFAULT_CHAT_FRAME:AddMessage("数据库无此数据",1,0,0)
 	end
 end
 --JANY进入战斗离开战斗
