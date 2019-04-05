@@ -1,6 +1,6 @@
-## Interface: 70100
+## Interface: 80100
 ## Title: TrufiGCD
-## Notes: View queue of last spells
+## Notes: View 施放技能展示
 ## SavedVariables: TrufiGCDGlSave
 ## SavedVariablesPerCharacter: TrufiGCDChSave
 ## OptionalDeps: ButtonFacade, Masque

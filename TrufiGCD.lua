@@ -1,5 +1,5 @@
 ﻿-- TrufiGCD stevemyz@gmail.com
-ChatFrame1:AddMessage("载入成功")--JANY
+ChatFrame1:AddMessage("载入成功TrufiGCD")--JANY
 --sizeicon = 30 
 --speed = sizeicon /1.6 --回放速度
 local TimeGcd = 1.6
@@ -1013,7 +1013,7 @@ function TrGCDEventHandler(self, event, ...)
 		--print(arg5 .. " - " .. spellname,"我正在施放技能")
 		if (TrGCDQueueOpt[i].text == "Target") then
 			--print("[------------------------------------]")
-			SendBossNotes(spellname)
+			--SendBossNotes(spellname)
 			--print("[+1]")
 		end
 		local blt = true -- TGCDCD队列
@@ -1140,10 +1140,13 @@ function TrGCDUpdate(self)
 	end
 end
 
-
+--[[
 
 if GetLocale() == "zhCN" then
 	Raiders_List = {
+			["怪物"] = {
+				{name = "巨钳蝎", raiders = "测试：发现了这个狗"},
+			},
 			["技能"] = {
 				{name = "邪能冲撞", raiders = "测试：敌人正在施放邪能冲撞"},
 				{name = "撕裂", raiders = "测试：敌人正在施放撕裂"},
@@ -1250,24 +1253,24 @@ function SendBossNotes(bossname)
 		raidersText = getRaidersByEncounterName(encounterName) or "无此BOSS数据"
 		bossname = encounterName
 	end
+	--DEFAULT_CHAT_FRAME:AddMessage(raidersText,1,0,0)
 	if raidersText and bossname and raidersText~="无此BOSS数据" then
-		bossname = '目标:' .. bossname
+		bossname = '【攻略】:' .. bossname
 		if IsInRaid() then
 			--SendChatMessage(bossname, (IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT") or "raid");
 			--SendChatMessage(raidersText, (IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT") or "raid");
-			DEFAULT_CHAT_FRAME:AddMessage(bossname, "say");
-			DEFAULT_CHAT_FRAME:AddMessage(raidersText, "say");
+			DEFAULT_CHAT_FRAME:AddMessage(bossname, "YELL");
+			DEFAULT_CHAT_FRAME:AddMessage(raidersText, "YELL");
 
 		elseif IsInGroup() then
 			--SendChatMessage(bossname, (IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT") or "party");
 			--SendChatMessage(raidersText, (IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT") or "party");
-			DEFAULT_CHAT_FRAME:AddMessage(bossname, "say");
-			DEFAULT_CHAT_FRAME:AddMessage(raidersText, "say");
+			DEFAULT_CHAT_FRAME:AddMessage(bossname, "YELL");
+			DEFAULT_CHAT_FRAME:AddMessage(raidersText, "YELL");
 		else
-			--SendChatMessage(bossname, "say");
-			--SendChatMessage(raidersText, "say");
-			DEFAULT_CHAT_FRAME:AddMessage(bossname, "say");
-			DEFAULT_CHAT_FRAME:AddMessage(raidersText, "say");
+			SendChatMessage(bossname .. raidersText, "YELL");
+			DEFAULT_CHAT_FRAME:AddMessage(bossname, "YELL");
+			DEFAULT_CHAT_FRAME:AddMessage(raidersText, "YELL");
 		end
 	--else
 		--DEFAULT_CHAT_FRAME:AddMessage("测试：数据库无此数据",1,0,0)
@@ -1278,12 +1281,13 @@ f:RegisterEvent("PLAYER_REGEN_DISABLED")
 f:RegisterEvent("PLAYER_REGEN_ENABLED")   
 f:SetScript("OnEvent", function (self,event)
 	if event == "PLAYER_REGEN_ENABLED" then
-		DEFAULT_CHAT_FRAME:AddMessage("离开战斗状态",1,0,0)
+		--DEFAULT_CHAT_FRAME:AddMessage("离开战斗状态",1,0,0)
 	elseif event == "PLAYER_REGEN_DISABLED" then
 		if UnitName("target") == nil then
-			DEFAULT_CHAT_FRAME:AddMessage("测试：没有目标",1,0,0)
+			--DEFAULT_CHAT_FRAME:AddMessage("测试：没有目标",1,0,0)
 			return
 		end
 		SendBossNotes(UnitName("target"));
 	end	
 end);
+]]
